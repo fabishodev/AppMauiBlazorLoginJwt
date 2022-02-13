@@ -1,0 +1,55 @@
+﻿@page "/products/{JWT}"
+
+@using AppMauiBlazorLoginJwt.Services
+
+
+@layout MainLayout
+<h3>Products</h3>
+<p>Token: @JWT</p>    
+
+
+@if (products == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Sku</th>
+				<th>Description</th>
+				<th>Price</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var product in products)
+			{
+				<tr>
+					<td>@product.Id.ToString()</td>
+					<td>@product.Sku</td>
+					<td>@product.Description</td>
+					<td>@product.Price.ToString()</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
+
+@code {
+    [Parameter]
+	public string JWT { get; set; }
+
+    private List<AppMauiBlazorLoginJwt.Models.Product> products;
+
+	protected override async Task OnInitializedAsync()
+	{
+		var productSvc = new Services.ProductService();
+		products = await productSvc.GetProducts(JWT);
+
+		
+	}
+
+}
